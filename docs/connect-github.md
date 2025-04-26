@@ -1,4 +1,4 @@
-# Konfiguracja połączenia z GitHub / DefectDojo
+# Konfiguracja połączenia z GitHub
 
 ## Fork repozytorium
 
