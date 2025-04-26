@@ -8,5 +8,5 @@ To repozytorium zawiera instrukcję postawienia laboratorium wraz z wszystkimi n
 
 ## Spis treści
 - [(1) Instalacja środowiska ](docs/installation-guide.md)
-- [(2) Konfiguracja połączenia z GitHub / DefectDojo](docs/connect-github.md)
+- [(2) Konfiguracja połączenia z GitHub](docs/connect-github.md)
 - [(3) Uruchomienie pipeline i wysyłanie wyników](docs/create-pipeline.md)

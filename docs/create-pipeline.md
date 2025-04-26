@@ -39,12 +39,20 @@ Do pisania pipeline wykorzystuj [declarative syntax](https://www.jenkins.io/doc/
 Po ustawieniu odpowiednich wartości (upewnij się, że zacommitowałeś zmiany do zdalnego repozytorium) możesz uruchomić pipeline za pomocą "Build now". Pierwsze uruchomienie zklonuje repozytorium do przestrzeni roboczej i wykona stage "Example", w którym robimy proste `echo` oraz listujemy zawartość bieżącego katalogu.
 ![jenkins first run](../assets/images/jenkins_first_pipeline_run.png)
 
-## Wysyłanie raportów do DefectDojo
-> [!NOTE]
-> W ABC DevSecOps narzędzie DefectDojo jest wykorzystywane tylko do celów administracyjnych związanych z weryfikacją przesłanych zadań. Nie będziesz miał dostępu do platformy, a jedynie do klucza API, który umożliwi przesłanie raportów z narzędzi.
+## Wysyłanie wyników do certyfikatu
 
-Podczas wdrażania narzędzia w pipeline będziesz generował raport z wynikami. Przykład:
+Aby uzyskać certyfikat ukończenia szkolenia ABC DevSecOps musisz wygenerować **4 artefakty dla praktyk omawianych w kursie**. Artefekty będą generowane ze skanów przeprowadzonych dla Twojego zforkowanego repozytorium z aplikacją Juice Shop.
 
+| Narzędzie              | Format   | Praktyka      |
+|------------------------|----------|---------------|
+| Zed Attack Proxy (ZAP) | XML/HTML | DAST          |
+| OSV-Scanner            | JSON     | SCA           |
+| TruffleHog             | JSON     | Sekrety       |
+| Semgrep                | JSON     | SAST          |
+
+Artefakty ze skanów możesz zapisywać na przykład w katalogu `results` po uprzednim utworzeniu go w pipeline.
+
+Przykład:
 ```
 ...
         stage('SCA scan') {
@@ -54,31 +62,15 @@ Podczas wdrażania narzędzia w pipeline będziesz generował raport z wynikami.
         }
         post {
             always {
-                defectDojoPublisher(artifact: 'results/sca-osv-scanner.json', 
-                    productName: 'Juice Shop', 
-                    scanType: 'OSV Scan', 
-                    engagementName: 'krzysztof@bezpiecznykod.pl')
-            }
+                echo 'Archiving results...'
+                archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
         }
+    }
 ...
 ```
 
-Wykorzystujemy plugin `defectDojoPublisher`, który automatycznie będzie korzystał z wcześniej skonfigurowanego połączenia. **Istotne kwestie**:
-- `artifact:` ścieżka do zapisanego wyniku (artefaktu)
-- `productName:` zawsze ustawiaj na `Juice Shop`
-- `scanType:` dobierz typ scanu do narzedzia jakie wdrażasz (tabelka poniżej)
-- `engagementName:` **UWAGA: ustaw wartość na swój adres e-mail (dzięki temu będziemy mogli Ciebie zidentyfikować)**
+Gdy wygenerujesz wszystkie artefakty możesz w prosty sposób z poziomu Jenkinsa pobrać je wszystkie spakowane w ZIPie.
+![jenkins_artifacts](../assets/images/results_1.png)
+![jenkins_save_zip](../assets/images/results_2.png)
 
-### Typy skanów
-> [!WARNING]
-> Typ skanu jest "case-sensitive".
-
-| Narzędzie              | Format | `scanType:`           |
-|------------------------|--------|-----------------------|
-| Zed Attack Proxy (ZAP) | XML    | 'ZAP Scan'            |
-| OSV-Scanner            | JSON   | 'OSV Scan'            |
-| TruffleHog             | JSON   | 'Trufflehog Scan'     |
-| Semgrep                | JSON   | 'Semgrep JSON Report' |
-
-Źródło:
-- https://documentation.defectdojo.com/dev/integrations/parsers/file/
+Plik ze spakowanymi artefaktami zapisz na dysku, zmień nazwę na swoje imię i nazwisko np. `jan_kowalski.zip` i prześlij za pomocą formularza (link znajdziesz na platformie kursowej).
