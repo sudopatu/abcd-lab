@@ -25,3 +25,4 @@ W Jenkins przejdź do ustawień [Dashboard / Manage Jenkins / Credentials / Syst
 - **Username** - nie ma znaczenia, możesz ustawić jako "Jenkins"
 - **Password** - tutaj wklejasz wygenerowany wcześniej token z GitHub
 - **ID** - tak jak sama nazwa wskazuje - będziesz do niego potem referował w kodzie Twojego pipeline (Jenkinsfile).
+- **Branch** - "main"
